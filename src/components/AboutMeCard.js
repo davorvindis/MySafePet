@@ -3,24 +3,19 @@ import Card from 'react-bootstrap/Card';
 
 // Define styled components
 const Title = styled(Card.Title)`
-  color: orange;                /* Set text color to orange */
+  color: orange;
   font-family: Arial, Helvetica, sans-serif;
-  font-weight: bold;            /* Make the text bold */
-  text-align: center;           /* Center the title */
-`;
-
-const Subtitle = styled(Card.Text)`   /* Styled Subtitle */
-  color: black;
-  font-family: Arial, Helvetica, sans-serif;
-  text-align: center;           /* Center the subtitle */
+  font-weight: bold;
+  text-align: center;
 `;
 
 function AboutMeCard({ title, subtitle }) {
   return (
-    <Card className ="p-0">
+    <Card className="p-0">
       <Card.Body>
         <Title>{title}</Title>
-        <Subtitle>{subtitle}</Subtitle>  {/* Using Subtitle styled component */}
+        {/* Render subtitle with inline styles directly */}
+        <div dangerouslySetInnerHTML={{ __html: subtitle }} style={{ width: '100%' }} />
       </Card.Body>
     </Card>
   );

@@ -12,6 +12,7 @@
     "react": "^18.0.0",
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.0.0",
+    "react-quill": "^2.0.0",
     "react-scripts": "^5.0.1",
     "styled-components": "^6.1.13",
     "web-vitals": "^4.2.3"
