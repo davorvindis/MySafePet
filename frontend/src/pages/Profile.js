@@ -2,19 +2,45 @@ import React, { useState } from 'react';
 import ProfileEditor from '../components/editors/ProfileEditor';
 import OwnerInfoEditor from '../components/editors/OwnerInfoEditor';
 import AdditionalInfoCardEditor from '../components/editors/AdditionalInfoCardEditor';
-import ImagesCardEditor from '../components/editors/ImagesCardEditor';
+
 import AboutMeEditor from '../components/editors/AboutMeEditor';
 import AboutMeCard from '../components/cards/AboutMeCard';
 import OwnerInfoCard from '../components/cards/OwnerInfoCard';
 import AdditionalInfoCard from '../components/cards/AdditionalInfoCard';
 import ProfileHeader from '../components/headers/ProfileHeader';
 import ContactIcons from '../components/editors/ContactIcons';
-import ImagesCard from '../components/cards/ImagesCard';
+
 import profilePic from '../assets/gati_profile.jpeg';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
 import '../styles/Profile.css';
 
+
+import ImagesCardEditor from '../components/editors/ImagesCardEditor';
+import ImagesCard from '../components/cards/ImagesCard';
+
+
 const Profile = () => {
+
+  const [photos, setPhotos] = useState([
+    { id: 1, src: 'https://www.google.com/imgres?q=images%20cat&imgurl=https%3A%2F%2Fi.natgeofe.com%2Fn%2F548467d8-c5f1-4551-9f58-6817a8d2c45e%2FNationalGeographic_2572187_2x1.jpg&imgrefurl=https%3A%2F%2Fwww.nationalgeographic.com%2Fanimals%2Fmammals%2Ffacts%2Fdomestic-cat&docid=K6Qd9XWnQFQCoM&tbnid=PfujBs9FDkBe-M&vet=12ahUKEwjBjLLz_eCJAxWrqZUCHZArL0EQM3oECGYQAA..i&w=3072&h=1536&hcb=2&ved=2ahUKEwjBjLLz_eCJAxWrqZUCHZArL0EQM3oECGYQAA' },
+    { id: 2, src: 'https://via.placeholder.com/150' },
+    { id: 3, src: 'https://via.placeholder.com/150' },
+  ]);
+
+  const [viewType, setViewType] = useState('grid1'); // Control view type
+  const [showTitleDesc, setShowTitleDesc] = useState(false); // Title and description toggle
+
+  // Add or delete photos from the editor
+  const handleAddPhoto = (photo) => {
+    setPhotos((prevPhotos) => [...prevPhotos, photo]);
+  };
+
+  const handleDeletePhoto = (photoId) => {
+    setPhotos((prevPhotos) => prevPhotos.filter((photo) => photo.id !== photoId));
+  };
+
+
+
   const [profile, setProfile] = useState({
     name: 'Gati',
     breed: 'Gato',
@@ -35,6 +61,7 @@ const Profile = () => {
     address: true,
   });
   const [profileImage, setProfileImage] = useState(profilePic);
+
   const [ownerInfo, setOwnerInfo] = useState({
     title: 'Owner Info',
     icon: faPhone,
@@ -43,8 +70,8 @@ const Profile = () => {
     address: profile.ownerAddress,
     extraInfo: [],
   });
+
   const [additionalInfo, setAdditionalInfo] = useState([]);
-  const [photos, setPhotos] = useState([]);
 
   const handleProfileChange = (field, value) => {
     setProfile((prevProfile) => ({ ...prevProfile, [field]: value }));
@@ -77,6 +104,11 @@ const Profile = () => {
     }));
   };
 
+
+
+
+
+
   // Components order
   const [componentOrder, setComponentOrder] = useState([
     { id: 'ProfileHeader', component: 'ProfileHeader' },
@@ -99,6 +131,13 @@ const Profile = () => {
     [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
     setComponentOrder(newOrder);
   };
+
+
+  const [uploadedImages, setUploadedImages] = useState([]); // Initialize as an empty array
+
+
+
+
 
   return (
     <div className="d-flex">
@@ -156,14 +195,21 @@ const Profile = () => {
               />
             )}
             {item.component === 'ImagesCardEditor' && (
-              <ImagesCardEditor
-                photos={photos}
-                onPhotoUpload={handlePhotoUpload}
-                moveUp={() => moveComponentUp(index)}
-                moveDown={() => moveComponentDown(index)}
-                isFirst={index === 0}
-                isLast={index === componentOrder.length - 1}
-              />
+              // <ImagesCardEditor
+              //   photos={photos}
+              //   onAddPhoto={handleAddPhoto}
+              //   onDeletePhoto={handleDeletePhoto}
+              //   viewType={viewType}
+              //   setViewType={setViewType}
+              //   showTitleDesc={showTitleDesc}
+              //   setShowTitleDesc={setShowTitleDesc}
+              //   moveUp={() => moveComponentUp(index)}
+              //   moveDown={() => moveComponentDown(index)}
+              //   isFirst={index === 0}
+              //   isLast={index === componentOrder.length - 1}
+              // />
+              <ImagesCardEditor onImagesUpload={setUploadedImages} onViewTypeChange={setViewType} />
+
             )}
           </div>
         ))}
@@ -197,10 +243,8 @@ const Profile = () => {
           if (item.component === 'AdditionalInfoCardEditor' && showAdditionalInfoCard) {
             return <AdditionalInfoCard key={item.id} title="Additional Information" additionalInfo={additionalInfo} />;
           }
-          if (item.component === 'ImagesCardEditor') {
-            return <ImagesCard key={item.id} photos={photos} />;
-          }
-          return null;
+          if (item.component === 'ImagesCardEditor') 
+            return <ImagesCard images={uploadedImages} viewType={viewType} />
         })}
       </div>
     </div>

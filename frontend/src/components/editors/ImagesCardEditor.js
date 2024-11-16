@@ -1,135 +1,92 @@
 import React, { useState } from 'react';
-import { Button, Form, Card, ToggleButton, ToggleButtonGroup, Accordion } from 'react-bootstrap';
-import { FaTrash, FaUpload } from 'react-icons/fa';
-import { postImage, getImages } from '../../services/imagesApi';
+import { Card, Form, Button } from 'react-bootstrap';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
+const ImagesCardEditor = ({ onImagesUpload }) => {
+  const [images, setImages] = useState([]);
 
-const ImagesCardEditor = ({ moveUp, moveDown, isFirst, isLast }) => {
-
-  const [photos, setPhotos] = useState([
-    { id: 1, src: 'https://via.placeholder.com/150' },
-    { id: 2, src: 'https://via.placeholder.com/150' },
-    { id: 3, src: 'https://via.placeholder.com/150' },
-  ]);
-  const [viewType, setViewType] = useState('grid1');
-  const [showTitleDesc, setShowTitleDesc] = useState(false);
-
-
-  // Ejemplo de cómo llamar a postImage
-  const handleImageUpload = async (file) => {
-    try {
-      const response = await postImage(file);
-      console.log('Image uploaded:', response.file_path);
-    } catch (error) {
-      console.error('Upload failed:', error);
-    }
+  const handleImagesChange = (event) => {
+    const files = Array.from(event.target.files);
+    const newImages = files.map((file) => ({
+      id: Date.now() + Math.random(), // Unique identifier
+      src: URL.createObjectURL(file),
+    }));
+    const updatedImages = [...images, ...newImages];
+    setImages(updatedImages); // Update local state
+    onImagesUpload(updatedImages); // Notify parent component
   };
 
-  // Ejemplo de cómo llamar a getImages
-  const fetchImages = async () => {
-    try {
-      const images = await getImages();
-      console.log('Images:', images);
-    } catch (error) {
-      console.error('Error fetching images:', error);
-    }
+  const handleRemoveImage = (id) => {
+    const updatedImages = images.filter((image) => image.id !== id);
+    setImages(updatedImages); // Update local state
+    onImagesUpload(updatedImages); // Notify parent component
   };
 
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return; // If dropped outside the list, do nothing
 
-  const handlePhotoUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const newPhoto = {
-        id: photos.length + 1,
-        src: URL.createObjectURL(file),
-      };
-      setPhotos([...photos, newPhoto]);
-    }
-  };
+    const reorderedImages = Array.from(images);
+    const [movedImage] = reorderedImages.splice(result.source.index, 1);
+    reorderedImages.splice(result.destination.index, 0, movedImage);
 
-  const handleDeletePhoto = (id) => {
-    setPhotos(photos.filter((photo) => photo.id !== id));
-  };
-
-  const handleViewTypeChange = (value) => {
-    setViewType(value);
+    setImages(reorderedImages); // Update local state
+    onImagesUpload(reorderedImages); // Notify parent component
   };
 
   return (
-    <div className="edit-section p-3 border-end">
-      <Accordion defaultActiveKey="0">
-        <Accordion.Item eventKey="0">
-          <Accordion.Header>Images
+    <Card className="p-3 mb-3" style={{ borderRadius: '10px' }}>
+      <Card.Title>Images</Card.Title>
+      <Form.Group>
+        <Form.Label>Choose Images</Form.Label>
+        <Form.Control
+          type="file"
+          accept="image/*"
+          multiple // Allow multiple image uploads
+          onChange={handleImagesChange}
+        />
+      </Form.Group>
 
-            <div>
-              <Button
-                variant="outline-primary"
-                size="sm"
-                onClick={moveUp}
-                disabled={isFirst} // Disable button if it's the first item
-                className="me-2"
-              >
-                Move Up
-              </Button>
-              <Button
-                variant="outline-primary"
-                size="sm"
-                onClick={moveDown}
-                disabled={isLast} // Disable button if it's the last item
-              >
-                Move Down
-              </Button>
-            </div>
-          </Accordion.Header>
-          <Accordion.Body>
-            <Card className="p-3">
-              <h5>Images</h5>
-
-              {/* Toggle para mostrar título y descripción */}
-              <Form.Check
-                type="switch"
-                label="Title, Description"
-                checked={showTitleDesc}
-                onChange={() => setShowTitleDesc(!showTitleDesc)}
-              />
-
-              {/* Tipo de Vista */}
-              <div className="my-3">
-                <Form.Label>View Type</Form.Label>
-                <ToggleButtonGroup type="radio" name="viewType" value={viewType} onChange={handleViewTypeChange}>
-                  <ToggleButton id="list" value="list">List</ToggleButton>
-                  <ToggleButton id="grid1" value="grid1">Grid 1</ToggleButton>
-                  <ToggleButton id="grid2" value="grid2">Grid 2</ToggleButton>
-                </ToggleButtonGroup>
-              </div>
-
-              {/* Fotos */}
-              <div className="d-flex flex-wrap">
-                {photos.map((photo) => (
-                  <div key={photo.id} className="position-relative m-2">
-                    <img src={photo.src} alt="pet" style={{ width: '100px', height: '100px', borderRadius: '8px' }} />
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      className="position-absolute top-0 end-0 m-1"
-                      onClick={() => handleDeletePhoto(photo.id)}
+      {/* Drag-and-Drop Context */}
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="droppable-images">
+          {(provided) => (
+            <div
+              className="mt-3 d-flex flex-wrap"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {images.map((image, index) => (
+                <Draggable key={image.id} draggableId={image.id.toString()} index={index}>
+                  {(provided) => (
+                    <div
+                      className="position-relative m-2"
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
                     >
-                      <FaTrash />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-
-              {/* Subir Nueva Foto */}
-              <div className="mt-3">
-                <Form.Label>Photos (600x600px, 1:1 or 4:5 Ratio)</Form.Label>
-                <Form.Control type="file" accept="image/*" onChange={handleImageUpload} />
-              </div>
-            </Card>
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
-    </div>
+                      <img
+                        src={image.src}
+                        alt="Uploaded"
+                        style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px' }}
+                      />
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className="position-absolute top-0 end-0 m-1"
+                        onClick={() => handleRemoveImage(image.id)}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </Card>
   );
 };
 
