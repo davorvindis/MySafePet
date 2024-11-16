@@ -18,6 +18,8 @@ import '../styles/Profile.css';
 import ImagesCardEditor from '../components/editors/ImagesCardEditor';
 import ImagesCard from '../components/cards/ImagesCard';
 
+// import './Profile.css'
+
 
 const Profile = () => {
 
@@ -145,6 +147,7 @@ const Profile = () => {
       <div>
         {componentOrder.map((item, index) => (
           <div key={item.id} className="editor-item">
+
             {item.component === 'ProfileHeader' && (
               <ProfileEditor
                 profile={profile}
@@ -216,7 +219,44 @@ const Profile = () => {
       </div>
 
       {/* Preview Section */}
-      <div className="profile-container p-3">
+      <div
+      className="device-frame"
+      style={{
+        width: '375px', // iPhone width
+        height: '812px', // iPhone height
+        margin: '20px auto', // Center the device
+        border: '16px solid black', // Device border
+        borderRadius: '40px', // Rounded edges for iPhone look
+        overflow: 'hidden', // Hide overflowing content
+        position: 'relative',
+        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)', // Subtle shadow for depth
+        backgroundColor: '#fff',
+      }}
+    >
+    {/* Notch */}
+    <div
+        style={{
+          width: '210px',
+          height: '30px',
+          backgroundColor: 'black',
+          borderRadius: '10px',
+          position: 'absolute',
+          // top: '8px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1,
+        }}
+      ></div>
+         {/* Scrollable Content */}
+         <div
+        style={{
+          width: '100%',
+          height: '100%',
+          overflowY: 'scroll',
+          padding: '20px', // Padding for content
+          boxSizing: 'border-box',
+        }}
+      >
         {componentOrder.map((item) => {
           if (item.component === 'ProfileHeader') {
             return <ProfileHeader key={item.id} name={profile.name} breed={profile.breed} subBreed={profile.subBreed} profilePic={profileImage} />;
@@ -243,11 +283,13 @@ const Profile = () => {
           if (item.component === 'AdditionalInfoCardEditor' && showAdditionalInfoCard) {
             return <AdditionalInfoCard key={item.id} title="Additional Information" additionalInfo={additionalInfo} />;
           }
-          if (item.component === 'ImagesCardEditor') 
+          if (item.component === 'ImagesCardEditor')
             return <ImagesCard images={uploadedImages} viewType={viewType} />
         })}
       </div>
     </div>
+      </div>
+  
   );
 };
 

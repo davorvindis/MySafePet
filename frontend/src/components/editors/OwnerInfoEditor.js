@@ -10,7 +10,7 @@ const icons = {
   user: faUser,
 };
 
-const OwnerInfoEditor = ({ ownerInfo, onOwnerInfoChange, moveUp, moveDown, isFirst, isLast }) => { 
+const OwnerInfoEditor = ({ ownerInfo, onOwnerInfoChange,moveUp, moveDown, isFirst, isLast }) => { 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     onOwnerInfoChange(name, value);
