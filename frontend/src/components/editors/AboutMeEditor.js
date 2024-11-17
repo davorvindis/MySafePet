@@ -65,6 +65,14 @@ const AboutMeEditor = ({ aboutMeData, setAboutMeData, styleConfig, setStyleConfi
                                     onChange={(e) => handleStyleChange('fontSize', `${e.target.value}px`)}
                                 />
                             </Form.Group> */}
+                            {/* Transparent Background Toggle */}
+                            <Form.Check
+                                type="switch"
+                                id="transparent-background"
+                                label="Transparent Background"
+                                checked={styleConfig.isTransparent}
+                                onChange={(e) => handleStyleChange('isTransparent', e.target.checked)}
+                            />
                         </Form>
                     </Accordion.Body>
                 </Accordion.Item>

@@ -141,8 +141,8 @@ const Profile = () => {
     backgroundColor: '#fff',
     textColor: '#000',
     fontSize: '16px',
+    isTransparent: false, // Default to non-transparent
   });
-
 
 
   return (
@@ -180,7 +180,7 @@ const Profile = () => {
             )}
             {item.component === 'AboutMeEditor' && (
               <>
-              {/* <AboutMeEditor
+                {/* <AboutMeEditor
                 aboutMeData={aboutMeData}
                 setAboutMeTitle={(title) => setAboutMeData({ ...aboutMeData, title })}
                 onAboutMeChange={(subtitle) => setAboutMeData({ ...aboutMeData, subtitle })}
@@ -189,12 +189,14 @@ const Profile = () => {
                 isFirst={index === 0}
                 isLast={index === componentOrder.length - 1}
               /> */}
-              <AboutMeEditor
-                aboutMeData={aboutMeData}
-                setAboutMeData={setAboutMeData}
-                styleConfig={aboutMeStyle}
-                setStyleConfig={setAboutMeStyle}
-              /></>
+                <AboutMeEditor
+                  aboutMeData={aboutMeData}
+                  setAboutMeData={setAboutMeData}
+                  styleConfig={aboutMeStyle}
+                  setStyleConfig={setAboutMeStyle}
+                />
+              </>
+
             )}
             {item.component === 'AdditionalInfoCardEditor' && (
               <AdditionalInfoCardEditor
