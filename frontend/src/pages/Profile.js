@@ -137,7 +137,11 @@ const Profile = () => {
 
   const [uploadedImages, setUploadedImages] = useState([]); // Initialize as an empty array
 
-
+  const [aboutMeStyle, setAboutMeStyle] = useState({
+    backgroundColor: '#fff',
+    textColor: '#000',
+    fontSize: '16px',
+  });
 
 
 
@@ -175,7 +179,8 @@ const Profile = () => {
               />
             )}
             {item.component === 'AboutMeEditor' && (
-              <AboutMeEditor
+              <>
+              {/* <AboutMeEditor
                 aboutMeData={aboutMeData}
                 setAboutMeTitle={(title) => setAboutMeData({ ...aboutMeData, title })}
                 onAboutMeChange={(subtitle) => setAboutMeData({ ...aboutMeData, subtitle })}
@@ -183,7 +188,13 @@ const Profile = () => {
                 moveDown={() => moveComponentDown(index)}
                 isFirst={index === 0}
                 isLast={index === componentOrder.length - 1}
-              />
+              /> */}
+              <AboutMeEditor
+                aboutMeData={aboutMeData}
+                setAboutMeData={setAboutMeData}
+                styleConfig={aboutMeStyle}
+                setStyleConfig={setAboutMeStyle}
+              /></>
             )}
             {item.component === 'AdditionalInfoCardEditor' && (
               <AdditionalInfoCardEditor
@@ -220,76 +231,81 @@ const Profile = () => {
 
       {/* Preview Section */}
       <div
-      className="device-frame"
-      style={{
-        width: '375px', // iPhone width
-        height: '812px', // iPhone height
-        margin: '20px auto', // Center the device
-        border: '16px solid black', // Device border
-        borderRadius: '40px', // Rounded edges for iPhone look
-        overflow: 'hidden', // Hide overflowing content
-        position: 'relative',
-        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)', // Subtle shadow for depth
-        backgroundColor: '#fff',
-      }}
-    >
-    {/* Notch */}
-    <div
+        className="device-frame"
         style={{
-          width: '210px',
-          height: '30px',
-          backgroundColor: 'black',
-          borderRadius: '10px',
-          position: 'absolute',
-          // top: '8px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 1,
-        }}
-      ></div>
-         {/* Scrollable Content */}
-         <div
-        style={{
-          width: '100%',
-          height: '100%',
-          overflowY: 'scroll',
-          padding: '20px', // Padding for content
-          boxSizing: 'border-box',
+          width: '375px', // iPhone width
+          height: '812px', // iPhone height
+          margin: '20px auto', // Center the device
+          border: '16px solid black', // Device border
+          borderRadius: '40px', // Rounded edges for iPhone look
+          overflow: 'hidden', // Hide overflowing content
+          position: 'relative',
+          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)', // Subtle shadow for depth
+          backgroundColor: '#fff',
         }}
       >
-        {componentOrder.map((item) => {
-          if (item.component === 'ProfileHeader') {
-            return <ProfileHeader key={item.id} name={profile.name} breed={profile.breed} subBreed={profile.subBreed} profilePic={profileImage} />;
-          }
-          // if (item.component === 'ContactIcons') {
-          //   return <ContactIcons key={item.id} profile={profile} iconsEnabled={iconsEnabled} />;
-          // }
-          if (item.component === 'AboutMeEditor') {
-            return <AboutMeCard key={item.id} title={aboutMeData.title} subtitle={aboutMeData.subtitle} />;
-          }
-          if (item.component === 'OwnerInfoEditor') {
-            return (
-              <OwnerInfoCard
-                key={item.id}
-                title={ownerInfo.title}
-                icon={ownerInfo.icon}
-                phone={ownerInfo.phone}
-                email={ownerInfo.email}
-                address={ownerInfo.address}
-                extraInfo={ownerInfo.extraInfo}
+        {/* Notch */}
+        <div
+          style={{
+            width: '210px',
+            height: '30px',
+            backgroundColor: 'black',
+            borderRadius: '10px',
+            position: 'absolute',
+            // top: '8px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 1,
+          }}
+        ></div>
+        {/* Scrollable Content */}
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            overflowY: 'scroll',
+            padding: '20px', // Padding for content
+            boxSizing: 'border-box',
+          }}
+        >
+          {componentOrder.map((item) => {
+            if (item.component === 'ProfileHeader') {
+              return <ProfileHeader key={item.id} name={profile.name} breed={profile.breed} subBreed={profile.subBreed} profilePic={profileImage} />;
+            }
+            // if (item.component === 'ContactIcons') {
+            //   return <ContactIcons key={item.id} profile={profile} iconsEnabled={iconsEnabled} />;
+            // }
+            if (item.component === 'AboutMeEditor') {
+              // return <AboutMeCard key={item.id} title={aboutMeData.title} subtitle={aboutMeData.subtitle} />;
+              return <AboutMeCard
+                title={aboutMeData.title}
+                subtitle={aboutMeData.subtitle}
+                styleConfig={aboutMeStyle}
               />
-            );
-          }
-          if (item.component === 'AdditionalInfoCardEditor' && showAdditionalInfoCard) {
-            return <AdditionalInfoCard key={item.id} title="Additional Information" additionalInfo={additionalInfo} />;
-          }
-          if (item.component === 'ImagesCardEditor')
-            return <ImagesCard images={uploadedImages} viewType={viewType} />
-        })}
+            }
+            if (item.component === 'OwnerInfoEditor') {
+              return (
+                <OwnerInfoCard
+                  key={item.id}
+                  title={ownerInfo.title}
+                  icon={ownerInfo.icon}
+                  phone={ownerInfo.phone}
+                  email={ownerInfo.email}
+                  address={ownerInfo.address}
+                  extraInfo={ownerInfo.extraInfo}
+                />
+              );
+            }
+            if (item.component === 'AdditionalInfoCardEditor' && showAdditionalInfoCard) {
+              return <AdditionalInfoCard key={item.id} title="Additional Information" additionalInfo={additionalInfo} />;
+            }
+            if (item.component === 'ImagesCardEditor')
+              return <ImagesCard images={uploadedImages} viewType={viewType} />
+          })}
+        </div>
       </div>
     </div>
-      </div>
-  
+
   );
 };
 
