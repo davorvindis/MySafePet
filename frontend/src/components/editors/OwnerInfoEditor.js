@@ -10,7 +10,7 @@ const icons = {
   user: faUser,
 };
 
-const OwnerInfoEditor = ({ ownerInfo, onOwnerInfoChange,moveUp, moveDown, isFirst, isLast }) => { 
+const OwnerInfoEditor = ({ ownerInfo, onOwnerInfoChange, moveUp, moveDown, isFirst, isLast }) => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     onOwnerInfoChange(name, value);
@@ -39,7 +39,7 @@ const OwnerInfoEditor = ({ ownerInfo, onOwnerInfoChange,moveUp, moveDown, isFirs
       <Accordion defaultActiveKey="0">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Edit Owner Info
-          <div>
+            <div>
               <Button
                 variant="outline-primary"
                 size="sm"
@@ -111,27 +111,31 @@ const OwnerInfoEditor = ({ ownerInfo, onOwnerInfoChange,moveUp, moveDown, isFirs
 
               {/* Extra Info Section */}
               <h6>Extra Information</h6>
-              {ownerInfo.extraInfo.map((info, index) => (
-                <div key={index} className="d-flex mb-2">
-                  <Form.Control
-                    type="text"
-                    placeholder="Label"
-                    value={info.label}
-                    onChange={(e) => handleExtraInfoChange(index, 'label', e.target.value)}
-                    className="me-2"
-                  />
-                  <Form.Control
-                    type="text"
-                    placeholder="Value"
-                    value={info.value}
-                    onChange={(e) => handleExtraInfoChange(index, 'value', e.target.value)}
-                    className="me-2"
-                  />
-                  <Button variant="danger" onClick={() => removeExtraInfoField(index)}>
-                    &times;
-                  </Button>
-                </div>
-              ))}
+              {ownerInfo.extraInfo && ownerInfo.extraInfo.length > 0 ? (
+                ownerInfo.extraInfo.map((info, index) => (
+                  <div key={index} className="d-flex mb-2">
+                    <Form.Control
+                      type="text"
+                      placeholder="Label"
+                      value={info.label}
+                      onChange={(e) => handleExtraInfoChange(index, 'label', e.target.value)}
+                      className="me-2"
+                    />
+                    <Form.Control
+                      type="text"
+                      placeholder="Value"
+                      value={info.value}
+                      onChange={(e) => handleExtraInfoChange(index, 'value', e.target.value)}
+                      className="me-2"
+                    />
+                    <Button variant="danger" onClick={() => removeExtraInfoField(index)}>
+                      &times;
+                    </Button>
+                  </div>
+                ))  
+              ) : (
+                <p>No extra information added yet.</p>
+              )}
               <Button variant="primary" onClick={addExtraInfoField}>
                 + Add
               </Button>

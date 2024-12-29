@@ -45,7 +45,6 @@ function OwnerInfoCard({ title, phone, email, address, icon, extraInfo }) {
 
         {extraInfo && extraInfo.length > 0 && (
           <>
-            
             {extraInfo.map((info, index) => (
               <div key={index}>
                 <SectionTitle>{info.label}</SectionTitle>

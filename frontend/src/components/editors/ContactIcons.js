@@ -3,7 +3,7 @@ import { Button, ButtonGroup } from 'react-bootstrap';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 
 const ContactIcons = ({ profile, iconsEnabled }) => (
-  <div className="d-flex justify-content-center mb-3">
+  <div className="edit-section p-3 border-end">
     <ButtonGroup aria-label="Contact Icons">
       {iconsEnabled.email && (
         <Button

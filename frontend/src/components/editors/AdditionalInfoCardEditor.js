@@ -1,28 +1,35 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Accordion, Form, Button } from 'react-bootstrap';
 
-const AdditionalInfoCardEditor = ({ additionalInfo, onAdditionalInfoChange, onToggleVisibility, showAdditionalInfoCard, moveUp, moveDown, isFirst, isLast }) => {
+const AdditionalInfoCardEditor = ({ additionalInfo, onAdditionalInfoChange, moveUp, moveDown, isFirst, isLast}) => {
+
+  const [showAdditionalInfoCard, setShowAdditionalInfoCard] = useState(true);
+
   const handleInfoChange = (index, field, value) => {
     const updatedInfo = additionalInfo.map((info, i) =>
       i === index ? { ...info, [field]: value } : info
     );
-    onAdditionalInfoChange(updatedInfo);
+    onAdditionalInfoChange(updatedInfo, showAdditionalInfoCard);
+  };
+
+  const handleToggleVisibility = () => {
+    const newVisibility = !showAdditionalInfoCard;
+    setShowAdditionalInfoCard(newVisibility);
+    onAdditionalInfoChange(additionalInfo, newVisibility); // Pass updated visibility state
   };
 
   const addInfoField = () => {
     const updatedInfo = [...additionalInfo, { label: '', value: '' }];
-    onAdditionalInfoChange(updatedInfo);
+    onAdditionalInfoChange(updatedInfo, showAdditionalInfoCard);
   };
 
   const removeInfoField = (index) => {
     const updatedInfo = additionalInfo.filter((_, i) => i !== index);
-    onAdditionalInfoChange(updatedInfo);
+    onAdditionalInfoChange(updatedInfo, showAdditionalInfoCard);
   };
 
   return (
     <div className="edit-section p-3 border-end">
-
-
       <Accordion defaultActiveKey="0">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Edit Additional Info
@@ -54,7 +61,7 @@ const AdditionalInfoCardEditor = ({ additionalInfo, onAdditionalInfoChange, onTo
                 id="show-additional-info-switch"
                 label="Show Additional Info Card"
                 checked={showAdditionalInfoCard}
-                onChange={onToggleVisibility} // Call the toggle function passed from Profile.js
+                onChange={handleToggleVisibility} // Call the toggle handler
               />
             </Form.Group>
             <Form>
@@ -83,8 +90,6 @@ const AdditionalInfoCardEditor = ({ additionalInfo, onAdditionalInfoChange, onTo
                 + Add
               </Button>
             </Form>
-
-
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>

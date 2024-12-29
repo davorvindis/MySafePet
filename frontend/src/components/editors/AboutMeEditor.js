@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Accordion } from 'react-bootstrap';
 
-const AboutMeEditor = ({ aboutMeData, setAboutMeData, styleConfig, setStyleConfig }) => {
+const AboutMeEditor = ({ aboutMeData, setAboutMeData, styleConfig, setStyleConfig, moveUp, moveDown, isFirst, isLast }) => {
     const handleStyleChange = (field, value) => {
         setStyleConfig((prevConfig) => ({
             ...prevConfig,
@@ -11,9 +11,28 @@ const AboutMeEditor = ({ aboutMeData, setAboutMeData, styleConfig, setStyleConfi
 
     return (
         <div className="edit-section p-3 border-end">
-            <Accordion>
+            <Accordion defaultActiveKey="0">
                 <Accordion.Item eventKey="0">
-                    <Accordion.Header>About Me Section</Accordion.Header>
+                    <Accordion.Header>About Me section
+                        <div>
+                            <Button
+                                variant="outline-primary"
+                                size="sm"
+                                onClick={moveUp}
+                                disabled={isFirst} // Disable button if it's the first item
+                                className="me-2"
+                            >
+                                Move Up
+                            </Button>
+                            <Button
+                                variant="outline-primary"
+                                size="sm"
+                                onClick={moveDown}
+                                disabled={isLast} // Disable button if it's the last item
+                            >
+                                Move Down
+                            </Button>
+                        </div></Accordion.Header>
                     <Accordion.Body>
                         {/* Content Configuration */}
                         <Form>
